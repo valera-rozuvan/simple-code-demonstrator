@@ -10,7 +10,7 @@ body {
 }
 
 button {
-  margin: 20px;
+  margin: 20px 20px 20px 0;
 }
 
 .custom-btn {
@@ -123,4 +123,8 @@ button {
   top: 2px;
   right: 20px;
   font-size: 15px;
+}
+
+#password_out, #hash_out {
+  color: red;
 }

@@ -20,5 +20,13 @@
         $('#button_01').click(function () {
             $('#textarea_01').val('!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\nHello, world!');
         });
+
+        $('#password_edit_id').on('input', function (a, b, c) {
+            $('#password_out').text(this.value);
+        });
+
+        $('#hash_edit_id').on('input', function (a, b, c) {
+            $('#hash_out').text(this.value);
+        });
     });
 }).call(this);
