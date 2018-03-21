@@ -32,7 +32,12 @@
 <body>
   <div class="wrapper">
     <div class="box a">
-      <button class="custom-btn btn-1" id="button_01">Click 1</button>
+      <ul>
+        <li>Login<input id="input_login"/></li>
+        <li>Password<input id="input_pwd"/></li>
+      </ul>
+    
+      <button class="custom-btn btn-1" id="button_01">Register</button>
     </div>
     <div class="box b">
       <ul>
@@ -44,38 +49,41 @@
     <div class="box c">
       <span class="tol_right">JS code</span>
       <textarea class="fill_full_text" id="textarea_01">Some text.</textarea>
+      <textarea class="fill_full_text" id="textarea_wallet" style="display:none;">Some text.</textarea>
     </div>
-
+    
     <div class="box d">
-      <button class="custom-btn btn-1" id="button_02">Click 2</button>
+      <li>Password<input id="input_pwd2"/></li>
+      <button class="custom-btn btn-1" id="button_showwallet">Show Wallet</button>
     </div>
     <div class="box e">
-      <ul>
-        <li id="priv_key">Private<input id="input_pk"/></li>
-        <li id="pub_key">Public<input id="input_pubk"/></li>
-        <li id="address">Address<input id="input_addr"/></li>
-      </ul>
-    </div>
-    <div class="box f">
-      <span class="tol_right">JS code</span>
-      
-      <textarea class="fill_full_text" id="textarea_02">Some more text. 2</textarea>
-    </div>
-
-    <div class="box g">
-      <button class="custom-btn btn-1">Click 3</button>
-    </div>
-    <div class="box h">
       <ul>
         <li>cat</li>
         <li>dog</li>
         <li>fish</li>
       </ul>
     </div>
+    <div class="box f">
+      <span class="tol_right">JS code</span>
+      <textarea class="fill_full_text" id="wallet_detail">Please edit me.</textarea>
+    </div>
+
+    <div class="box g">
+      <button class="custom-btn btn-1" id="button_02">Click 2</button>
+    </div>
+    <div class="box h">
+      <ul>
+        <li id="priv_key">Private<input id="input_pk"/></li>
+        <li id="pub_key">Public<input id="input_pubk"/></li>
+        <li id="address">Address<input id="input_addr"/></li>
+      </ul>
+    </div>
     <div class="box i">
       <span class="tol_right">JS code</span>
-      <textarea class="fill_full_text">Please edit me.</textarea>
+      
+      <textarea class="fill_full_text" id="textarea_02">Some more text. 2</textarea>
     </div>
+
   </div>
 </body>
 
