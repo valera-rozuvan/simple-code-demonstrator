@@ -1,90 +1,282 @@
 <!doctype html>
 
 <html lang="en">
-
 <head>
-  <!--
-    "Remember, the web isn't about control. If a visitor to your site
-    is familiar with using a browser's native form doodad, you won't
-    be doing them any favors if you override the browser functionality
-    with your own widget, even if you think your widget looks better."
-
-    ~ Jeremy Keith
-  -->
-
   <meta charset="utf-8" />
   <meta name="description" content="Simple code demonstrator" />
   <meta name="author" content="Valera Rozuvan" />
-
-  <title>Simple code demonstrator</title>
-
-  <link rel="stylesheet" href="css/styles.css?v=1.0" />
-
-  <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
-    </script>
-  <![endif]-->
-
-  <script data-main="js/main" src="js/vendor/requirejs/require.min.js">
-  </script>
+  <title>NEM Token demonstration</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-
 <body>
-  <div class="wrapper">
-    <div class="box a">
-      <ul>
-        <li>Login<input id="input_login"/></li>
-        <li>Password<input id="input_pwd"/></li>
-      </ul>
-    
-      <button class="custom-btn btn-1" id="button_01">Register</button>
-    </div>
-    <div class="box b">
-      <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-      </ul>
-    </div>
-    <div class="box c">
-      <span class="tol_right">JS code</span>
-      <textarea class="fill_full_text" id="textarea_01">Some text.</textarea>
-      <textarea class="fill_full_text" id="textarea_wallet" style="display:none;">Some text.</textarea>
-    </div>
-    
-    <div class="box d">
-      <li>Password<input id="input_pwd2"/></li>
-      <button class="custom-btn btn-1" id="button_showwallet">Show Wallet</button>
-    </div>
-    <div class="box e">
-      <ul>
-        <li>cat</li>
-        <li>dog</li>
-        <li>fish</li>
-      </ul>
-    </div>
-    <div class="box f">
-      <span class="tol_right">JS code</span>
-      <textarea class="fill_full_text" id="wallet_detail">Please edit me.</textarea>
-    </div>
+ <div class="container">
+ 	<div class="row">
+ 		<div class="col-xs-12"><h2>Token information</h2></div>
+ 		<div class="col-xs-12">
+ 			<button class="btn btn-primary" id="btn-token-info">Execute</button>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>JS request:</h3>
+ 			<pre class="js-request">
+ 	
+jQuery('#btn-token-info').click(function () {
+	jQuery.get('http://bigalice2.nem.ninja:7890/account/mosaic/definition/page?address=TC6SDTFIDJMHR7YHGNJS4ZKA5Y2A36WQDSMDCDVJ&parent=dataspark',function(res){
+	   res.data.forEach(function(item, i, arr) {
+	  	if(item.description == 'SkillToken') {
+			console.log(item);
+			jQuery('#tokenname').text(item.description);
+			jQuery('#totalsupply').text(item.properties[1].value);
+	  	}
+		});
+	});
+});
+ 			</pre>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>Information:</h3>
+ 			<label>Name: </label> <span id="tokenname"></span><br>
+ 			<label>TotalSupply: </label> <span id="totalsupply"></span><br>
+ 		</div>
+ 	</div>
+	<hr>
+ 	<div class="row">
+ 		<div class="col-xs-12"><h2>Registration procedure</h2></div>
+ 		<div class="col-xs-12">
+ 			<input id='password' type="text" name="password" placeholder="Enter password">
+ 			<button class="btn btn-primary" id="btn-registration">Execute</button>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>JS request:</h3>
+ 			<pre class="js-request">
+$('#btn-registration').click(function () {
+	var nem = require("nem-sdk").default;
+    var rBytes = nem.crypto.nacl.randomBytes(32);
+    var rHex = nem.utils.convert.ua2hex(rBytes);
+    var keyPair = nem.crypto.keyPair.create(rHex);
+	console.log(rHex,
+			keyPair.publicKey.toString(),
+			nem.model.address.toAddress(keyPair.publicKey.toString(), nem.model.network.data.testnet.id));
+		$('#wallet').text(nem.model.address.toAddress(keyPair.publicKey.toString(), nem.model.network.data.testnet.id));
+		$('#private_key').text(rHex);
+	$('#public_key').text(keyPair.publicKey.toString());
+});
+ 			</pre>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>Information:</h3>
+ 			<label>Wallet: </label> <span id="wallet"></span><br>
+ 			<label>Private key: </label> <span id="private_key"></span><br>
+ 			<label>Public key: </label> <span id="public_key"></span><br>
+ 		</div>
+ 	</div>
+	<hr>
+ 	<div class="row">
+ 		<div class="col-xs-12"><h2>Forum post procedure</h2></div>
+ 		<div class="col-xs-12">
+ 			<input id='user_wallet' type="text" name="user_wallet" placeholder="User wallet">
+ 			<input id='tokens_amount' type="text" name="tokens_amount" placeholder="Tokens amount">
+ 			<button class="btn btn-primary" id="btn-forum-post">Execute</button>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>JS request:</h3>
+ 			<pre class="js-request">
+ 	$('#button_showwallet').click(function () {
+            var password = $('#input_pwd2').val();
+            // Create Brain wallet
+            var base64 =  $('#textarea_wallet').val();
+            var decArray = nem.crypto.js.enc.Base64.parse(base64);
+            var strWallet = nem.crypto.js.enc.Utf8.stringify(decArray);
+            var wallet = JSON.parse(strWallet);
+            // Create a common object
+            var common = nem.model.objects.create("common")(password, "");
+            
+            // Get the wallet account to decrypt
+            var walletAccount = wallet.accounts['0'];
+            
+            // Decrypt account private key
+            $('#input_addr').val(walletAccount.address);
+            
+            try {
+                nem.crypto.helpers.passwordToPrivatekey(common, walletAccount, walletAccount.algo);
+                var keyPair = nem.crypto.keyPair.create(common.privateKey);
+                $('#wallet_detail').val('Wallet name: '+wallet.name+'\nAddress: '+walletAccount.address+'\nPrivate key: '+common.privateKey+'\nPublic Key: '+keyPair.publicKey.toString());
+            } catch(err) {
+                $('#wallet_detail').val('Wallet name: '+wallet.name+'\nAddress: '+walletAccount.address+'\nBAD PASSWORD');
+            }
+        });
+ 			</pre>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>Information:</h3>
+ 			<label>Tokens before post: </label> <span id="tokens_before_post"></span><br>
+ 			<label>Tokens after forum post: </label> <span id="tokens_after_post"></span><br>
+ 		</div>
+ 	</div>
 
-    <div class="box g">
-      <button class="custom-btn btn-1" id="button_02">Click 2</button>
-    </div>
-    <div class="box h">
-      <ul>
-        <li id="priv_key">Private<input id="input_pk"/></li>
-        <li id="pub_key">Public<input id="input_pubk"/></li>
-        <li id="address">Address<input id="input_addr"/></li>
-      </ul>
-    </div>
-    <div class="box i">
-      <span class="tol_right">JS code</span>
-      
-      <textarea class="fill_full_text" id="textarea_02">Some more text. 2</textarea>
-    </div>
+ 	<div class="row">
+ 		<div class="col-xs-12"><h2>Token (mosaic) balance</h2></div>
+ 		<div class="col-xs-12">
+ 			<input id='balance_of_wallet' type="text" name="balance_of_wallet" placeholder="Enter wallet">
+ 			<button class="btn btn-primary" id="btn-balance-of">Execute</button>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>JS request:</h3>
+ 			<pre class="js-request">
+$('#btn-balance-of').click(function () {
+	var balanceOfWallet = jQuery('#balance_of_wallet').val();
+	var link = "http://bigalice2.nem.ninja:7890/account/mosaic/owned?address=" + balanceOfWallet;
+	jQuery.get(link, function(res){
+	console.log(res);
+	});
+});
+ 			</pre>
+ 		</div>
+ 		<div class="col-xs-6">
+ 			<h3>Information:</h3>
+ 			<label>Wallet: </label> <span id="balance_wallet"></span><br>
+ 			<label>SkillTokens amount: </label> <span id="st_amount"></span><br>
+ 		</div>
+ 	</div>
+ </div>
+ </div>
 
-  </div>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/vendor/nem/nem-sdk.js"></script>
+<script type="text/javascript">
+  
+  /**
+ * "Rules of Optimization:
+ *     Rule 1: Don't do it.
+ *     Rule 2 (for experts only): Don't do it yet.”
+ *
+ * ~ Michael A. Jackson
+ */
+
+jQuery(document).ready(function ($) {
+
+        var nem = require("nem-sdk").default;
+        var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
+
+		$('#btn-balance-of').click(function () {
+			var balanceOfWallet = jQuery('#balance_of_wallet').val();
+			$('#st_amount').text('');
+			var link = "http://bigalice2.nem.ninja:7890/account/mosaic/owned?address=" + balanceOfWallet;
+			jQuery.get(link, function(res){
+			console.log(res);
+					$('#balance_wallet').text(balanceOfWallet);
+			   res.data.forEach(function(item, i, arr) {
+			  	if(item.mosaicId.namespaceId == 'dataspark' && item.mosaicId.name == 'st') {
+					var fmt = nem.utils.format.nemValue(item.quantity);
+					$('#st_amount').text(fmt[0] + "." + fmt[1]);
+			  	}
+			  	});
+			});
+		});
+
+        $('#btn-token-info').click(function () {
+        	jQuery.get('http://bigalice2.nem.ninja:7890/account/mosaic/definition/page?address=TC6SDTFIDJMHR7YHGNJS4ZKA5Y2A36WQDSMDCDVJ&parent=dataspark',function(res){
+			   res.data.forEach(function(item, i, arr) {
+			  	if(item.description == 'SkillToken') {
+					console.log(item);
+					jQuery('#tokenname').text(item.description);
+					jQuery('#totalsupply').text(item.properties[1].value);
+			  	}
+				});
+			});
+        });
+
+		$('#btn-forum-post').click(function(){
+			var namespaceId = 'dataspark';
+			var mosaicName = 'st';
+			var quantity =1000000* $('#tokens_amount').val() || 2;
+			var recepient = $('#user_wallet').val();
+
+        	var nem = require("nem-sdk").default;
+        	var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
+			// Create an empty un-prepared transfer transaction object
+			var transferTransaction = nem.model.objects.get("transferTransaction");
+
+			// Create an empty common object to hold pass and key
+			var common = nem.model.objects.get("common");
+
+			// Get a mosaicDefinitionMetaDataPair object with preloaded xem definition
+			var mosaicDefinitionMetaDataPair = nem.model.objects.get("mosaicDefinitionMetaDataPair");
+
+
+//attach Mosaics
+			var mosaicAttachment = nem.model.objects.create("mosaicAttachment")(namespaceId, mosaicName, quantity);
+
+			// Push attachment into transaction mosaics
+			transferTransaction.mosaics.push(mosaicAttachment);
+
+
+//send Transaction
+
+
+		send(common,mosaicDefinitionMetaDataPair, transferTransaction, recepient, quantity);
+
+
+		});
+
+
+	function send(common,mosaicDefinitionMetaDataPair,transferTransaction, recepient, amount) {
+		// Check form for errors
+		var privKey = '2470537b32df9f09c5a78ef1504ef3b27176a09da1c84ff59446c66c5fd72816';
+		if(!transferTransaction.mosaics.length) return alert('You must attach at least one mosaic !');
+		if(!privKey || !recepient) return alert('Missing parameter !');
+		if(undefined === amount || !nem.utils.helpers.isTextAmountValid(amount)) return alert('Invalid amount !');
+		if (!nem.model.address.isValid(nem.model.address.clean(recepient))) return alert('Invalid recipent address !');
+
+		// Set the private key in common object
+		common.privateKey = '2470537b32df9f09c5a78ef1504ef3b27176a09da1c84ff59446c66c5fd72816';
+
+		// Check private key for errors
+		if (common.privateKey.length !== 64 && common.privateKey.length !== 66) return alert('Invalid private key, length must be 64 or 66 characters !');
+    	if (!nem.utils.helpers.isHexadecimal(common.privateKey)) return alert('Private key must be hexadecimal only !');
+
+		// Set the cleaned amount into transfer transaction object
+		transferTransaction.amount = nem.utils.helpers.cleanTextAmount(1);
+
+		// Recipient address must be clean (no hypens: "-")
+		transferTransaction.recipient = nem.model.address.clean(recepient);
+
+		// Set message
+		transferTransaction.message = 'Za sozdanie posta';
+
+		// Prepare the updated transfer transaction object
+		var transactionEntity = nem.model.transactions.prepare("mosaicTransferTransaction")(common, transferTransaction, mosaicDefinitionMetaDataPair, nem.model.network.data.testnet.id);
+		transactionEntity.fee = 500000;
+console.log(transferTransaction,transactionEntity);
+		// Serialize transfer transaction and announce
+		nem.model.transactions.send(common, transactionEntity, endpoint).then(function(res){
+			// If code >= 2, it's an error
+			if (res.code >= 2) {
+				alert(res.message);
+			} else {
+				alert(res.message);
+			}
+		}, function(err) {
+			alert(err);
+		});
+	}
+
+
+        $('#btn-registration').click(function () {
+        	var nem = require("nem-sdk").default;
+            var rBytes = nem.crypto.nacl.randomBytes(32);
+            var rHex = nem.utils.convert.ua2hex(rBytes);
+            var keyPair = nem.crypto.keyPair.create(rHex);
+			console.log(rHex,
+					keyPair.publicKey.toString(),
+					nem.model.address.toAddress(keyPair.publicKey.toString(), nem.model.network.data.testnet.id));
+ 			$('#wallet').text(nem.model.address.toAddress(keyPair.publicKey.toString(), nem.model.network.data.testnet.id));
+ 			$('#private_key').text(rHex);
+			$('#public_key').text(keyPair.publicKey.toString());
+        });
+
+});
+
+</script>
 </body>
-
 </html>
