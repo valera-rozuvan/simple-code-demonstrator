@@ -1,4 +1,99 @@
-/**
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <!--
+    "Remember, the web isn't about control. If a visitor to your site
+    is familiar with using a browser's native form doodad, you won't
+    be doing them any favors if you override the browser functionality
+    with your own widget, even if you think your widget looks better."
+
+    ~ Jeremy Keith
+  -->
+
+  <meta charset="utf-8" />
+  <meta name="description" content="Simple code demonstrator" />
+  <meta name="author" content="Valera Rozuvan" />
+
+  <title>Simple code demonstrator</title>
+
+  <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"-->
+  <link rel="stylesheet" href="css/styles.css?v=1.0" />
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
+    </script>
+  <![endif]-->
+
+  
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="box a">
+      <ul>
+        <li>Login<input id="input_login"/></li>
+        <li>Password<input id="input_pwd"/></li>
+      </ul>
+    
+      <button class="custom-btn btn-1" id="button_01">Register</button>
+    </div>
+    <div class="box b">
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ul>
+    </div>
+    <div class="box c">
+      <span class="tol_right">JS code</span>
+      <textarea class="fill_full_text" id="textarea_01">Some text.</textarea>
+      <textarea class="fill_full_text" id="textarea_wallet" style="display:none;">Some text.</textarea>
+    </div>
+    
+    <div class="box d">
+      <li>Password<input id="input_pwd2"/></li>
+      <button class="custom-btn btn-1" id="button_showwallet">Show Wallet</button>
+    </div>
+    <div class="box e">
+      <ul>
+        <li>cat</li>
+        <li>dog</li>
+        <li>fish</li>
+      </ul>
+    </div>
+    <div class="box f">
+      <span class="tol_right">JS code</span>
+      <textarea class="fill_full_text" id="wallet_detail">Please edit me.</textarea>
+    </div>
+
+    <div class="box g">
+      <button class="custom-btn btn-1" id="button_02">Click 2</button>
+    </div>
+    <div class="box h">
+      <ul>
+        <li id="priv_key">Private<input id="input_pk"/></li>
+        <li id="pub_key">Public<input id="input_pubk"/></li>
+        <li id="address">Address<input id="input_addr"/></li>
+      </ul>
+    </div>
+    <div class="box i">
+      <span class="tol_right">JS code</span>
+      
+      <textarea class="fill_full_text" id="textarea_02">Some more text. 2</textarea>
+    </div>
+
+  </div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></scrip-->
+
+<script src="js/vendor/nem/nem-sdk.js"></script>
+
+<script type="text/javascript">
+  
+  /**
  * "Rules of Optimization:
  *     Rule 1: Don't do it.
  *     Rule 2 (for experts only): Don't do it yet.”
@@ -6,7 +101,8 @@
  * ~ Michael A. Jackson
  */
 
-(function () {
+jQuery(document).ready(function ($) {
+    /**
     require.config({
         baseUrl: 'js',
         paths: {
@@ -14,8 +110,8 @@
             nem: 'vendor/nem/nem-sdk'
         }
     });
-
-    require(['jquery','nem'], function ($) {
+*/
+    //require(['jquery','nem'], function ($) {
         $.noConflict();
         var nem = require("nem-sdk").default;
         var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
@@ -49,6 +145,7 @@
             var transferTransaction = nem.model.objects.create("transferTransaction")(recipient, amount, message);
             var transactionEntity = nem.model.transactions.prepare("transferTransaction")(common, transferTransaction, nem.model.network.data.testnet.id)
             console.log(transactionEntity);
+            console.log(common,  endpoint);
             nem.model.transactions.send(common, transactionEntity, endpoint).then(function(res) {console.log("done");console.log(res);});
             
         });
@@ -79,4 +176,10 @@
         });
 
     });
-}).call(this);
+//}).call(this);
+
+</script>
+
+</body>
+
+</html>
